@@ -24,4 +24,9 @@ DATABASES = {
     },
 }
 END
+    clear
+    echo Success!
+    echo Now run docker-compose up --build
+    sleep 5
+    rm ./setup.sh
 fi
