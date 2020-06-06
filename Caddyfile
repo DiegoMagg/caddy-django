@@ -1,5 +1,5 @@
 localhost {
-  root /path/to/project
+  root .
   file_server /static
   reverse_proxy web:8000
 }
