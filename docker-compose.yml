@@ -4,7 +4,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        command: gunicorn myproject.wsgi --bind 0.0.0.0:8000
+        command: pipenv run gunicorn myproject.wsgi --bind 0.0.0.0:8000
         env_file: myenv.env
         image: 'docker.myproject'
         depends_on:
@@ -26,7 +26,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        command: python manage.py migrate
+        command: pipenv run python manage.py migrate
         env_file: myenv.env
         image: 'docker.myproject'
         depends_on:
