@@ -29,7 +29,7 @@ https://localhost
 
 
 
-**note:** Caddy automagically set https as described [here](https://caddyserver.com/docs/automatic-https), in tests, both firefox and google chrome will warn you due to a TLS handshake error since localhost have a unknown certificate authority. Just bypass the alert through advanced settings and see django initial page.
+**note:** Caddy automagically set https as described [here](https://caddyserver.com/docs/automatic-https). During tests, both firefox and google chrome will warn you due to a TLS handshake error since localhost have a unknown certificate authority. Just bypass the alert through advanced settings and see django initial page.
 
 
 ## Caddyfile with domain
@@ -41,4 +41,3 @@ https://localhost
     }
 
 Change localhost to your domain and build.
-To serve static files set STATIC_ROOT in project settings as described [here](https://docs.djangoproject.com/en/3.0/howto/static-files/#deployment) .

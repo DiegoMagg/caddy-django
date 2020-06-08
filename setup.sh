@@ -27,6 +27,6 @@ END
     clear
     echo Success!
     echo Now run docker-compose up --build
-    sleep 5
+    sleep 3
     rm ./setup.sh
 fi
