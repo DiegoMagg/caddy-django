@@ -1,2 +1,5 @@
 #Vscode
 .history/
+
+#flake8
+tox.ini

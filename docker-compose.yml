@@ -19,6 +19,7 @@ services:
         ports:
             - 80:80
             - 443:443
+        image: 'docker.myproject'
         volumes:
         - ./Caddyfile:/etc/caddy/Caddyfile
 

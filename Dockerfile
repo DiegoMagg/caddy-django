@@ -25,8 +25,6 @@ RUN apk add --update \
   fribidi-dev \
   && rm -rf /var/cache/apk/*
 
-COPY Caddyfile /etc/caddy/Caddyfile
-
 WORKDIR /app
 RUN pip3 install --no-cache-dir --upgrade pipenv pip && rm -rf /root/.cache/*
 ADD Pipfile /app/Pipfile
