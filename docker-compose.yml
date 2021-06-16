@@ -13,7 +13,7 @@ services:
             - .:/app
 
     caddy:
-        image: caddy:2.0.0-alpine
+        image: caddy:2.3.0-alpine
         links:
             - web:web
         ports:
@@ -35,7 +35,7 @@ services:
             - .:/app
 
     postgres:
-        image: 'postgres:12.3-alpine'
+        image: 'postgres:13.3-alpine'
         volumes:
             - postgres_data:/var/lib/postgresql/data/
         env_file: myenv.env
