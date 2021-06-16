@@ -5,7 +5,7 @@ if [ ! $1 ]; then
     echo Error: You must provide the project name.
 else
     pipenv run django-admin startproject ${PROJECT_NAME} .
-    sed -i "s/myproject/${PROJECT_NAME}/g" ./myenv.env ./docker-compose.yml
+    sed -i "s/$(pwd)/${PROJECT_NAME}/g" ./myenv.env ./docker-compose.yml
     sed -i 's|project_path|'$(pwd)/$PROJECT_NAME'|g' ./Caddyfile
     sed -i '71,81 d' $(pwd)/${PROJECT_NAME}/settings.py
     tee -a $(pwd)/${PROJECT_NAME}/settings.py << END
