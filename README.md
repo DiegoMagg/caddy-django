@@ -18,11 +18,10 @@ requirements:
 ### Setup:
 
     $ git clone git@github.com:DiegoMagg/caddy-django.git .
-    $ pipenv install
 
 ### Create and run server
-    $ ./setup.sh project_name
-    $ docker-compose up --build
+    $ python3 setup.py your_project_name
+    $ make up
 
 Then, go to your browser and type:
 https://localhost
