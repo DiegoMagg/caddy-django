@@ -1,6 +1,7 @@
-from sys import argv
 import subprocess
 import pathlib
+from os import remove
+from sys import argv
 from yaml import dump
 from re import sub
 
@@ -125,3 +126,5 @@ if __name__ == '__main__':
     if argv[-1] == __file__:
         raise Exception('You must provide the project name.')
     setup(argv[-1])
+    print(*['Project created', 'Now run "make up".'], sep='\n')
+    remove(f'{PROJECT_PATH}/setup.py')
