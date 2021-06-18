@@ -14,6 +14,7 @@ def setup(project_name):
     create_docker_compose_yaml(project_name)
     replace_default_database_settings(project_name)
     create_initial_dot_env(project_name)
+    create_caddyfile()
 
 
 def create_docker_compose_yaml(project_name):
@@ -35,6 +36,7 @@ def create_docker_compose_yaml(project_name):
             },
             "caddy": {
                 "image": "caddy:2.3.0-alpine",
+                "container_name": f"caddy",
                 "links": ["web:web"],
                 "ports": ["80:80", "443:443"],
                 "volumes": ["./Caddyfile:/etc/caddy/Caddyfile"],
@@ -58,12 +60,11 @@ def create_docker_compose_yaml(project_name):
         },
         "volumes": {"postgres_data": None},
     }
-    with open(f'{PROJECT_PATH}/docker-compose.yaml', 'w') as yml:
-        yml.write(dump(yaml_dict, sort_keys=False, line_break='\n'))
+    create_file('docker-compose.yaml', dump(yaml_dict, sort_keys=False))
 
 
 def replace_default_database_settings(project_name):
-    settings_path = f'{PROJECT_PATH}/{project_name}/settings.py'
+    settings_path = f'{project_name}/settings.py'
     path_lib_str = 'from pathlib import Path'
     new_conf = (
         '{\n'
@@ -77,30 +78,47 @@ def replace_default_database_settings(project_name):
     )
     with open(settings_path, 'rt') as default_settings:
         default_settings = default_settings.read()
-    with open(settings_path, 'wt') as settings:
-        default_settings = default_settings.replace(
-            path_lib_str,
-            f'{path_lib_str}\nimport os\n',
+    settings = default_settings.replace(path_lib_str, f'{path_lib_str}\nimport os\n')
+    create_file(
+        settings_path,
+        sub(
+            r"({\n\s*\'E\w+.*)\n\s*\S\w+\S*\s.*\n.*",
+            new_conf,
+            settings,
         )
-        settings.write(
-            sub(
-                r"({\n\s*\'E\w+.*)\n\s*\S\w+\S*\s.*\n.*",
-                new_conf,
-                default_settings,
-            ),
+    )
+
+
+def create_caddyfile():
+    create_file(
+        'Caddyfile',
+        (
+            'localhost {\n'
+            f'  root {PROJECT_PATH}\n'
+            '  file_server /static\n'
+            '  reverse_proxy web:8000\n'
+            '}'
         )
+    )
 
 
 def create_initial_dot_env(project_name):
-    with open(f'{PROJECT_PATH}/.env', 'w') as envfile:
-        envfile.write((
+    create_file(
+        '.env',
+        (
             f'DJANGO_SETTINGS_MODULE={project_name}.settings\n'
             'POSTGRES_DB=postgres\n'
             'POSTGRES_USER=postgres\n'
             'POSTGRES_PASSWORD=postgres\n'
             'POSTGRES_HOST=postgres\n'
             'PYTHONPATH=.'
-        ))
+        )
+    )
+
+
+def create_file(path, content):
+    with open(f'{PROJECT_PATH}/{path}', 'w') as file:
+        file.write(content)
 
 
 if __name__ == '__main__':
