@@ -10,8 +10,8 @@ PROJECT_PATH = str(pathlib.Path().absolute())
 
 
 def setup(project_name):
-    params = ['pipenv', 'run', 'django-admin', 'startproject', project_name, '.']
-    subprocess.run(params)
+    command = ['pipenv', 'run', 'django-admin', 'startproject', project_name, '.']
+    subprocess.run(command)
     create_docker_compose_yaml(project_name)
     replace_default_database_settings(project_name)
     create_initial_dot_env(project_name)
@@ -74,7 +74,7 @@ def replace_default_database_settings(project_name):
         "        'USER': os.environ.get('POSTGRES_USER'),\n"
         "        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),\n"
         "        'HOST': os.environ.get('POSTGRES_HOST'),\n"
-        "        'POST': 5432,\n"
+        "        'PORT': 5432,\n"
         '    },'
     )
     with open(settings_path, 'rt') as default_settings:
@@ -95,7 +95,7 @@ def create_caddyfile():
         'Caddyfile',
         (
             'localhost {\n'
-            f'  root {PROJECT_PATH}\n'
+            f'  root {PROJECT_PATH[1:]}\n'
             '  file_server /static\n'
             '  reverse_proxy web:8000\n'
             '}'
@@ -127,4 +127,5 @@ if __name__ == '__main__':
         raise Exception('You must provide the project name.')
     setup(argv[-1])
     print(*['Project created', 'Now run "make up".'], sep='\n')
+    subprocess.run(['pipenv', 'uninstall', 'PyYAML'])
     remove(f'{PROJECT_PATH}/setup.py')
